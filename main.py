@@ -1,1 +1,4 @@
-print("hello world")
+diaz = 2
+
+print(diaz)
+
