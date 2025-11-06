@@ -10,6 +10,7 @@ dependencies = [
     "bcrypt>=5.0.0",
     "dotenv>=0.9.9",
     "fastapi[standard]>=0.121.0",
+    "passlib[bcrypt]>=1.7.4",
     "psycopg2>=2.9.11",
     "psycopg2-binary>=2.9.11",
     "pytest>=8.4.2",
