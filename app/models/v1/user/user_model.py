@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr, StringConstraints, ConfigDict, 
 from typing import Optional, Annotated
 from enum import Enum
 from sqlalchemy.dialects.postgresql import UUID
-import uuid
+from uuid import UUID
 
 # Tipe data untuk nomor telepon
 Phone = Annotated[
@@ -41,16 +41,10 @@ class UserCreate(UserBase):
         return v
     
     
-class UserResponse(UserBase):
-    """Model untuk memberikan response"""
-    id_user: uuid.UUID = Field(default_factory=uuid.uuid4, description="UUID unik untuk user")
-    
-    model_config = ConfigDict(from_attributes=True)
     
 class UserUpdate(BaseModel):
     nama: Optional[str] = None
     username: Optional[str] = None
-    alamat: Optional[str] = None
     no_telp: Optional[Phone] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = Field(None, min_length=8)
@@ -59,7 +53,6 @@ class UserUpdate(BaseModel):
 class UserRegis(BaseModel):
     nama: str = Field(..., description="Nama lengkap")
     username: str = Field(..., description="Username unik untuk login", max_length=50)
-    alamat: str = Field(..., description="Alamat Pengguna")
     no_telp: Phone = Field(..., description="Nomor Telpon")
     email: EmailStr = Field(..., examples=["user@example.com"], description="Alamat Email anda")
     password: str = Field(..., min_length=8, max_length=72, description="Password User (Minimal 8 Karakter)")
@@ -74,3 +67,12 @@ class UserRegis(BaseModel):
 class DeleteUserResponse(BaseModel):
     message: str = Field(..., description="Pesan konfirmasi penghapusan user")
     
+
+class UserResponse(UserBase):
+    """Model untuk memberikan response"""
+    id: UUID = Field(..., description="UUID unik untuk user")
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_encoders={UUID: str}
+    )
