@@ -23,3 +23,9 @@ class MejaUpdate(BaseModel):
     kapasitas: Optional[int] = None
     lokasi: Optional[str] = None
 
+class MejaDeleteResponse(BaseModel):
+    detail: str
+    data: MejaResponse
+
+    class ConfigDict:
+        from_attributes = True
