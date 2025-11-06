@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from app.models.v1.meja import (         
+from app.models.v1.meja.meja_models import (         
     MejaCreate,   
     MejaUpdate,   
 )
-from models import Meja
+from orm_models import Meja
 
 
 def get_all_meja(db: Session):

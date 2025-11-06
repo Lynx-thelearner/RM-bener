@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
-from app.models.v1.meja import (
+from app.models.v1.meja.meja_models import (
     MejaCreate,
     MejaUpdate,
     MejaResponse,

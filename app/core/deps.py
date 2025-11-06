@@ -1,9 +1,9 @@
 """ deps.py berisikan function yang tugasnya mengambil sesi database"""
 
-from app.core.database import Sessionlocal
+from app.core.database import SessionLocal
 
 def get_db():
-    db = Sessionlocal()
+    db = SessionLocal()
     try:
         yield db
     finally:

@@ -12,7 +12,8 @@ class PaymentBase(BaseModel):
     amount: float = Field(..., description="Jumlah pembayaran")
     payment_date: date = Field(..., description="Tanggal pembayaran dalam format YYYY-MM-DD")
     status: PaymentStatusEnum = Field(..., description="Status pembayaran")
-    
+  
+
 class PaymentCreate(PaymentBase):
     """Model untuk membuat pembayaran baru"""
     pass
