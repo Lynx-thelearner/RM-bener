@@ -26,7 +26,7 @@ def create_reservation(request: ReservationCreate ,db: Session = Depends(get_db)
     return reservation_service.ReservationCreate(request, db)
     
 """"Update data reservasi"""
-@router.put("/{reservation_id}", response_model=ReservationResponse)
+@router.patch("/{reservation_id}", response_model=ReservationResponse)
 def update_reservation(reservation_id: int, request: ReservationUpdate, db: Session = Depends(get_db)):
     return reservation_service.update_reservation(db, reservation_id, request)
 
