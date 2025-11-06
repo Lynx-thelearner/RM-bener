@@ -1,6 +1,12 @@
-diaz = 2
+from fastapi import FastAPI
 
-print(diaz)
+app = FastAPI(
+    title="NER API Service",
+    version="1.0.0",
+    description="A FastAPI service for New Entry Reservation (NER)" 
+    )
 
-Kedata = "Hola, Mundo!"
-print(Kedata)
+"""ROOT ENDPOINT"""
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the NER API Service!"}

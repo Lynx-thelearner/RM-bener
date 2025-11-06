@@ -1,0 +1,66 @@
+
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+table users{
+  id uuid [primary key]
+  name varchar 
+  username varchar [unique]
+  password varchar 
+  email email [unique]
+  phone varchar [unique]
+  created_at timestamp
+  role enum ("admin", "manager", "reservationStaff", "waiter", "customer")
+
+}
+
+
+Table Meja {
+  id integer [primary key]
+  kode_meja string [unique]
+  Capacity integer
+  location enum ("indoor", "outdoor", "vip")
+  status enum ("tersedia", "tidak tersedia")
+}
+
+
+table reservasion {
+  id interger  [primary key]
+  id_table integer
+  reservation_time timestamp 
+  guest_count integer
+  notes text 
+  status enum ("Pending","Confirmed","Cancelled", "Completed")
+  id_staff uuid 
+  id_user uuid
+
+}
+
+
+table payment {
+  id integer [primary key]
+  id_reservation integer
+  amount float
+  method enum ("cash", "tranfer/card", "e-wallet")
+  status enum ("unpaid", "paid", "refunded")
+  transaction_time datetime
+}
+
+table feedback {
+  id integer [primary key]
+  id_reservation integer
+  rating enum (1, 2, 3, 4, 5)
+  comment text 
+  created_at datetime
+  id_user uuid
+}
+
+
+
+
+Ref : Meja.id < reservasion.id_table
+Ref : reservasion.id < feedback.id_reservation
+Ref : payment.id_reservation < reservasion.id
+
+Ref : users.id < reservasion.id_staff
+Ref : users.id < reservasion.id_user
+Ref : users.id < feedback.id_user
