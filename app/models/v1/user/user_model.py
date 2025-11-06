@@ -36,7 +36,7 @@ class UserCreate(UserBase):
     
 class UserResponse(BaseModel):
     """Model untuk memberikan response"""
-    id_user: UUID = Field(default_factory=uuid.uuid4, description="UUID unik untuk user")
+    id_user: uuid.UUID = Field(default_factory=uuid.uuid4, description="UUID unik untuk user")
     
     model_config = ConfigDict(from_attributes=True)
     
@@ -56,3 +56,6 @@ class UserRegis(BaseModel):
     no_telp: Phone = Field(..., description="Nomor Telpon")
     email: EmailStr = Field(..., examples=["user@example.com"], description="Alamat Email anda")
     password: str = Field(..., min_length=8, description="Password User (Minimal 8 Karakter)")
+
+class DeleteUserResponse(BaseModel):
+    message: str = Field(..., description="Pesan konfirmasi penghapusan user")

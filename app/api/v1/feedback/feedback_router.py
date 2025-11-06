@@ -3,7 +3,7 @@ from app.core.auth import get_current_admin, get_current_user, get_current_petug
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
-from app.models.v1.feedback import (
+from app.models.v1.feedback.feedback_models import (
     FeedbackCreate,
     FeedbackUpdate,
     FeedbackResponse,

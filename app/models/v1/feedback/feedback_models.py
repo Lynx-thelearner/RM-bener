@@ -4,10 +4,10 @@ from datetime import date
 from decimal import Decimal
 from enum import Enum
 from sqlalchemy.dialects.postgresql import UUID
-from uuid import uuid4
+import uuid
 
 class Feedback(BaseModel):
-    user_id: UUID = Field(..., description="UUID unik untuk user yang memberikan feedback")
+    user_id: uuid.UUID = Field(..., description="UUID unik untuk user yang memberikan feedback")
     reservation_id: int = Field(..., description="ID unik untuk reservasi yang diberikan feedback")
     rating: int = Field(..., ge=1, le=5, description="Rating feedback dari 1 hingga 5")
     comments: Optional[str] = Field(None, description="Komentar tambahan untuk feedback")
@@ -24,7 +24,7 @@ class FeedbackResponse(Feedback):
     model_config = ConfigDict(from_attributes=True)
     
 class FeedbackUpdate(BaseModel):
-    user_id: Optional[UUID] = Field(None, description="UUID unik untuk user yang memberikan feedback")
+    user_id: Optional[uuid.UUID] = Field(None, description="UUID unik untuk user yang memberikan feedback")
     reservation_id: Optional[int] = Field(None, description="ID unik untuk reservasi yang diberikan feedback")
     rating: Optional[int] = Field(None, ge=1, le=5, description="Rating feedback dari 1 hingga 5")
     comments: Optional[str] = Field(None, description="Komentar tambahan untuk feedback")
