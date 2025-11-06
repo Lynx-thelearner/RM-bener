@@ -49,7 +49,8 @@ def get_user(id:UUID, db: Session = Depends(get_db),
 """ POST /user = tambah user"""
 @router.post("/", response_model=UserResponse, status_code=201)
 def create_user(user: UserCreate, db: Session = Depends(get_db),
-                 current_admin: User = Depends(get_current_admin)
+                current_admin: User = Depends(get_current_admin)
+                 
                  ):
     return user_service.create_user(db, user)
 
