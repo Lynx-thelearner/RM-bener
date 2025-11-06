@@ -21,7 +21,7 @@ def get_feedback_by_id(db: Session, feedback_id: int):
 def create_feedback(db: Session, feedback: FeedbackCreate):
     """Function untuk menambah feedback baru"""
     new_feedback = Feedback(
-        created_at=datetime.now(),
+        feedback_date=datetime.now(),
         **feedback.model_dump(),
     )
     db.add(new_feedback)
