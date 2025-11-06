@@ -1,7 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Optional
 from datetime import date
-from decimal import Decimal
 from enum import Enum
 
 class PaymentStatusEnum(str, Enum):
@@ -18,6 +16,13 @@ class PaymentBase(BaseModel):
 class PaymentCreate(PaymentBase):
     """Model untuk membuat pembayaran baru"""
     pass
+
+class PaymentUpdate(BaseModel):
+    """Schema untuk update data payment"""
+    id_reservation: int | None = None
+    amount: float | None = None
+    status: PaymentStatusEnum | None = None
+    transaction_time: date | None = None
 
 class PaymentResponse(PaymentBase):
     """Model untuk memberikan response pembayaran"""
