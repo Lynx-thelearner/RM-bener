@@ -6,7 +6,7 @@ from app.api.v1.reservation import reservation_service
 from orm_models import Reservation
 
 router = APIRouter(
-    prefix=["/reservation"],
+    prefix="/reservation",
     tags=["reservation"]
 )
 

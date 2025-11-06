@@ -34,7 +34,7 @@ class User(Base):
     role = Column(Enum(UserRole), default=UserRole.customer, nullable=False)
     
     reservations = relationship("Reservation", back_populates="user")
-    feedbacks = relationship("Feedback", back_populates="user")
+    feedback = relationship("Feedback", back_populates="user")
 
 class Meja(Base):
     __tablename__ = "meja"
@@ -65,6 +65,7 @@ class Reservation(Base):
     user = relationship("User", back_populates="reservations")
     meja = relationship("Meja", back_populates="reservations")
     payment = relationship("Payment", back_populates="reservation")
+    feedback = relationship("Feedback", back_populates="reservation")
     
 class PaymentStatus(enum.Enum):
     menunggu = "menunggu"
@@ -77,7 +78,7 @@ class Payment(Base):
     payment_id = Column(Integer, primary_key=True, index=True)
     reservation_id = Column(Integer, ForeignKey("reservation.reservation_id"), nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)
-    payment_date = Column(DateTime(timezone=True), server_default=func.now(), default=date.today, nullable=False)
+    payment_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     status = Column(Enum(PaymentStatus), default=PaymentStatus.menunggu, nullable=False)
     
     reservation = relationship("Reservation", back_populates="payment")
@@ -92,5 +93,5 @@ class Feedback(Base):
     comments = Column(String, nullable=True)
     feedback_date = Column(DATE, default=date.today, nullable=False)
     
-    user = relationship("User", back_populates="feedbacks")
-    reservation = relationship("Reservation", back_populates="feedbacks")
+    user = relationship("User", back_populates="feedback")
+    reservation = relationship("Reservation", back_populates="feedback")

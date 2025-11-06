@@ -7,7 +7,7 @@ from app.models.v1.payment.payment_model import (
     PaymentResponse,
 )
 from app.api.v1.payment import payment_service
-from models import Users
+from orm_models import User
 from app.core.auth import get_current_admin, get_current_user, get_current_manager, get_current_petugas
 
 router = APIRouter( tags=["Payment"])
@@ -16,7 +16,7 @@ router = APIRouter( tags=["Payment"])
 """ GET /payment = semua pembayaran """
 @router.get("/", response_model=list[PaymentResponse])
 def list_payments(db: Session = Depends(get_db),
-                  current_manager: Users = Depends(get_current_manager)
+                  current_manager: User = Depends(get_current_manager)
                   ):
     return payment_service.get_all_payments(db)
 
@@ -24,7 +24,7 @@ def list_payments(db: Session = Depends(get_db),
 """ GET /payment/{id} = detail pembayaran berdasarkan id"""
 @router.get("/{id}", response_model=PaymentResponse)
 def get_payment(id: int, db: Session = Depends(get_db),
-                current_manager: Users = Depends(get_current_manager)
+                current_manager: User = Depends(get_current_manager)
                 ):
     payment = payment_service.get_payment_by_id(db, id)
     if not payment:
@@ -54,7 +54,7 @@ def update_payment(id: int, payment: PaymentUpdate, db: Session = Depends(get_db
 """ DELETE /payment/{id} = hapus pembayaran """
 @router.delete("/{id}", response_model=PaymentResponse)
 def delete_payment(id: int, db: Session = Depends(get_db),
-                   current_admin: Users = Depends(get_current_admin)
+                   current_admin: User = Depends(get_current_admin)
                    ):
     deleted_payment = payment_service.delete_payment(db, id)
     if not deleted_payment:

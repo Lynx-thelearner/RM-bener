@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
-from app.models.v1.feedback import (
+from app.models.v1.feedback.feedback_models import (
     FeedbackCreate,
     FeedbackUpdate,
     
