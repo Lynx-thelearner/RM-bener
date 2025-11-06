@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DATE, ForeignKey, DECIMAL, Enum
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 from app.core.database import Base
 import enum
 from datetime import date
@@ -7,10 +8,18 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Time
 
+Base = declarative_base()
+metadata = Base.metadata
+
 #Enum buat user role
 class UserRole(enum.Enum):
     admin = "admin"
+    manager = "manager"
+    reservationStaff = "reservationStaff"
+    waiter = "waiter"
     customer = "customer"
+
+
     
 class User(Base):
     __tablename__ = "user"
