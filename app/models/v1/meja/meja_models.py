@@ -17,4 +17,9 @@ class MejaResponse(BaseModel):
     meja_id: int = Field(..., description="ID unik untuk meja")
     
     model_config = ConfigDict(from_attributes=True)
+    
+class MejaUpdate(BaseModel):
+    kode_meja: Optional[str] = None
+    kapasitas: Optional[int] = None
+    lokasi: Optional[str] = None
 

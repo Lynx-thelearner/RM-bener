@@ -7,8 +7,9 @@ from datetime import date
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Time
+from sqlalchemy import DateTime
+from sqlalchemy.sql import func
 
-Base = declarative_base()
 metadata = Base.metadata
 
 #Enum buat user role
@@ -53,7 +54,7 @@ class ReservationStatus(enum.Enum):
 class Reservation(Base):
     __tablename__ = "reservation"
     
-    reservation_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    reservation_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False)
     meja_id = Column(Integer, ForeignKey("meja.meja_id"), nullable=False)
     tanggal_reservasi = Column(DATE, default=date.today, nullable=False)
@@ -73,10 +74,10 @@ class PaymentStatus(enum.Enum):
 class Payment(Base):
     __tablename__ = "payment"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    reservation_id = Column(UUID(as_uuid=True), ForeignKey("reservation.reservation_id"), nullable=False)
+    payment_id = Column(Integer, primary_key=True, index=True)
+    reservation_id = Column(Integer, ForeignKey("reservation.reservation_id"), nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)
-    payment_date = Column(DATE, default=date.today, nullable=False)
+    payment_date = Column(DateTime(timezone=True), server_default=func.now, default=date.today, nullable=False)
     status = Column(Enum(PaymentStatus), default=PaymentStatus.menunggu, nullable=False)
     
     reservation = relationship("Reservation", back_populates="payment")
@@ -84,9 +85,9 @@ class Payment(Base):
 class Feedback(Base):
     __tablename__ = "feedback"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    feedback_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False)
-    reservation_id = Column(UUID(as_uuid=True), ForeignKey("reservation.reservation_id"), nullable=False)
+    reservation_id = Column(Integer, ForeignKey("reservation.reservation_id"), nullable=False)
     rating = Column(Integer, nullable=False)
     comments = Column(String, nullable=True)
     feedback_date = Column(DATE, default=date.today, nullable=False)
