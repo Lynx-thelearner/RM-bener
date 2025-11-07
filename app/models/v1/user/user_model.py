@@ -50,7 +50,6 @@ class UserResponse(UserBase):
 class UserUpdate(BaseModel):
     nama: Optional[str] = None
     username: Optional[str] = None
-    alamat: Optional[str] = None
     no_telp: Optional[Phone] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = Field(None, min_length=8)
@@ -59,7 +58,6 @@ class UserUpdate(BaseModel):
 class UserRegis(BaseModel):
     nama: str = Field(..., description="Nama lengkap")
     username: str = Field(..., description="Username unik untuk login", max_length=50)
-    alamat: str = Field(..., description="Alamat Pengguna")
     no_telp: Phone = Field(..., description="Nomor Telpon")
     email: EmailStr = Field(..., examples=["user@example.com"], description="Alamat Email anda")
     password: str = Field(..., min_length=8, max_length=72, description="Password User (Minimal 8 Karakter)")
