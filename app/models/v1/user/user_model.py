@@ -70,7 +70,7 @@ class DeleteUserResponse(BaseModel):
 
 class UserResponse(UserBase):
     """Model untuk memberikan response"""
-    id: UUID = Field(..., description="UUID unik untuk user")
+    user_id: UUID = Field(..., description="UUID unik untuk user")
 
     model_config = ConfigDict(
         from_attributes=True,
