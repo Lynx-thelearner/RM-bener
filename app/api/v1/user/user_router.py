@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Response, status
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
 from app.models.v1.user.user_model import  UserCreate,  UserUpdate,  UserResponse, DeleteUserResponse
@@ -9,23 +9,14 @@ from uuid import UUID
 
 router = APIRouter( tags=["User"])
 
-
-
-""" GET /user = daftar user """
-@router.get("/", response_model=list[UserResponse])
-def list_user(db: Session = Depends(get_db),
-               user: User = Depends(get_current_admin)
-               ):
-    return user_service.get_all_user(db)
-
 """=============================PROFILE TERITORI====================================="""
-@router.get("/profile/", response_model=UserResponse)
+@router.get("/profile", response_model=UserResponse)
 def get_profile(current_user: User = Depends(get_current_user)):
     return current_user
 
 
 
-@router.patch("/profile/", response_model=UserResponse)
+@router.patch("/profile", response_model=UserResponse)
 def update_profile(user_update: UserUpdate, db: Session= Depends(get_db), current_user: User = Depends(get_current_user)):
     updated_user = user_service.update_user(db, current_user.user_id, user_update)
     if not updated_user:
@@ -35,9 +26,15 @@ def update_profile(user_update: UserUpdate, db: Session= Depends(get_db), curren
 """=============================PROFILE TERITORI====================================="""
 
 
+""" GET /user = daftar user """
+@router.get("/", response_model=list[UserResponse])
+def list_user(db: Session = Depends(get_db),
+               user: User = Depends(get_current_admin)
+               ):
+    return user_service.get_all_user(db)
 
-""" GET /user/{uuid} = detail user """
-@router.get("/{uuid}", response_model=UserResponse)
+""" GET /user/{id} = detail user """
+@router.get("/{id}", response_model=UserResponse)
 def get_user(id:UUID, db: Session = Depends(get_db),
               current_manager: User= Depends(get_current_manager)
               ):
@@ -57,8 +54,8 @@ def create_user(user: UserCreate, db: Session = Depends(get_db),
 
 
 
-""" PUT /user/{uuid} = update user"""
-@router.patch("/{uuid}", response_model=UserResponse)
+""" PUT /user/{id} = update user"""
+@router.patch("/{id}", response_model=UserResponse)
 def update_user(id: UUID, user: UserUpdate, db: Session = Depends(get_db),
                  current_admin: User = Depends(get_current_admin)
                  ):
@@ -69,13 +66,10 @@ def update_user(id: UUID, user: UserUpdate, db: Session = Depends(get_db),
 
 
 
-@router.delete("/{uuid}", response_model=DeleteUserResponse)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(id: UUID, db: Session = Depends(get_db),
                  current_admin: User = Depends(get_current_admin)):
     deleted_user = user_service.delete_and_return_user(db, id)
-    if deleted_user:
-        return {
-            "detail": "User deleted successfully",
-            "data": deleted_user
-        }
-    raise HTTPException(status_code=404, detail="User tidak ditemukan")
+    if not deleted_user:
+        raise HTTPException(status_code=404, detail="User tidak ditemukan")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

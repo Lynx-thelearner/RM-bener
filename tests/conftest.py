@@ -21,7 +21,7 @@ async def auth_header():
             "username": "Naga",
             "password": "naganaga"
         }
-        respon = await ac.post("/api/v1/auth", data=login_data)
+        respon = await ac.post("/api/v1/auth/login", data=login_data)
         assert respon.status_code == 200, respon.text
         token = respon.json().get("access_token")
         return {"Authorization": f"Bearer {token}"}
