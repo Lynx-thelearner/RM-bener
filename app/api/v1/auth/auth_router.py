@@ -18,13 +18,13 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     # coba login sebagai customer
     user = auth_service.authenticate_customer(db, form_data.username, form_data.password)
     if user:
-        token = create_access_token({"id": user.user_id, "role": "customer"})
+        token = create_access_token({"user_id": str(user.user_id), "role": "customer"})
         return {"access_token": token, "token_type": "bearer"}
 
     # coba login sebagai staff
     user = auth_service.authenticate_staff(db, form_data.username, form_data.password)
     if user:
-        token = create_access_token({"user_id": user.id, "role": user.role})
+        token = create_access_token({"user_id": str(user.user_id), "role": user.role.value})
         return {"access_token": token, "token_type": "bearer"}
 
     raise HTTPException(status_code=401, detail="Invalid username or password")

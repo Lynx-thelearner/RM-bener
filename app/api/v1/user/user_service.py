@@ -29,7 +29,7 @@ def get_all_user(db: Session):
 
 """ Function untuk ambil data user berdasarkan ID """
 def get_user_by_id(db: Session, user_id: UUID):
-    return db.query(User).filter(User.id == user_id).first()
+    return db.query(User).filter(User.user_id == user_id).first()
 
 
 """ Function untuk tambah data user """
@@ -77,7 +77,7 @@ def update_user(db: Session, user_id: UUID, user_update: UserUpdate):
 
 """ Function untuk hapus data user """
 def delete_and_return_user(db: Session, user_id: UUID):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.user_id == user_id).first()
     if not user:
         return None
     # simpan dulu datanya
