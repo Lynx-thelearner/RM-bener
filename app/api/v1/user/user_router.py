@@ -14,9 +14,10 @@ router = APIRouter( tags=["User"])
 """ GET /user = daftar user """
 @router.get("/", response_model=list[UserResponse])
 def list_user(db: Session = Depends(get_db),
-               user: User = Depends(get_current_manager)
+               user: User = Depends(get_current_admin)
                ):
     return user_service.get_all_user(db)
+
 """=============================PROFILE TERITORI====================================="""
 @router.get("/profile/", response_model=UserResponse)
 def get_profile(current_user: User = Depends(get_current_user)):
@@ -26,7 +27,7 @@ def get_profile(current_user: User = Depends(get_current_user)):
 
 @router.patch("/profile/", response_model=UserResponse)
 def update_profile(user_update: UserUpdate, db: Session= Depends(get_db), current_user: User = Depends(get_current_user)):
-    updated_user = user_service.update_user(db, current_user.id, user_update)
+    updated_user = user_service.update_user(db, current_user.user_id, user_update)
     if not updated_user:
         raise HTTPException(status_code=404, detail="User tidak ditemukan")
     return updated_user
