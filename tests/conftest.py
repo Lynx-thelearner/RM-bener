@@ -18,6 +18,10 @@ async def auth_header():
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         #login dan dapetin token
         login_data = {
-            "username": "",
-            "password": ""
+            "username": "Naga",
+            "password": "naganaga"
         }
+        respon = await ac.post("/api/v1/auth", data=login_data)
+        assert respon.status_code == 200, respon.text
+        token = respon.json().get("access_token")
+        return {"Authorization": f"Bearer {token}"}
