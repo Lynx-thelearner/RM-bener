@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr, StringConstraints, ConfigDict, field_validator
 from typing import Optional, Annotated
 from enum import Enum
+from orm_models import UserRole
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import UUID
 
@@ -14,12 +15,6 @@ Phone = Annotated[
     )
 ]
 
-class RoleEnum(str, Enum):
-    admin = "admin"
-    manager = "manager"
-    reservationStaff = "reservationStaff"
-    waiter = "waiter"
-    customer = "customer"
     
 class UserBase(BaseModel):
     """Model Awal"""
@@ -27,7 +22,7 @@ class UserBase(BaseModel):
     username: str = Field(..., description="Username unik untuk login", min_length=3, max_length=50)    
     no_telp: Phone = Field(..., description="Nomor telepon user")
     email: EmailStr = Field(..., examples=["user@example.com"], description="Alamat email user")
-    role: RoleEnum = Field(..., description="Role user")
+    role: UserRole = Field(..., description="Role user")
     
 class UserCreate(UserBase):
     """Model untuk membuat user baru"""
@@ -48,7 +43,7 @@ class UserUpdate(BaseModel):
     no_telp: Optional[Phone] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = Field(None, min_length=8)
-    role: Optional[RoleEnum] = None
+    role: Optional[UserRole] = None
     
 class UserRegis(BaseModel):
     nama: str = Field(..., description="Nama lengkap")
