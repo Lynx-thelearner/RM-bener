@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr, StringConstraints, ConfigDict, 
 from typing import Optional, Annotated
 from enum import Enum
 from sqlalchemy.dialects.postgresql import UUID
-import uuid
+from uuid import UUID
 
 # Tipe data untuk nomor telepon
 Phone = Annotated[
@@ -41,11 +41,6 @@ class UserCreate(UserBase):
         return v
     
     
-class UserResponse(UserBase):
-    """Model untuk memberikan response"""
-    id_user: uuid.UUID = Field(default_factory=uuid.uuid4, description="UUID unik untuk user")
-    
-    model_config = ConfigDict(from_attributes=True)
     
 class UserUpdate(BaseModel):
     nama: Optional[str] = None
@@ -72,3 +67,12 @@ class UserRegis(BaseModel):
 class DeleteUserResponse(BaseModel):
     message: str = Field(..., description="Pesan konfirmasi penghapusan user")
     
+
+class UserResponse(UserBase):
+    """Model untuk memberikan response"""
+    id: UUID = Field(..., description="UUID unik untuk user")
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_encoders={UUID: str}
+    )

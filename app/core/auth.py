@@ -29,14 +29,16 @@ class TokenData(BaseModel):
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
 
-    # pastikan UUID dikonversi ke string sebelum encode
-    if "user_id" in to_encode:
-        to_encode["user_id"] = str(to_encode["user_id"])
+    # konversi semua UUID dalam data ke string
+    for key, value in to_encode.items():
+        if isinstance(value, UUID):
+            to_encode[key] = str(value)
 
     expire = datetime.now() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 
 def verify_token(token: str = Depends(oauth2_scheme)) -> TokenData:
