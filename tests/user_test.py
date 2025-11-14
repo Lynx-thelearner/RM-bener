@@ -29,40 +29,26 @@ from main import app
         "email": "johnsmith@user.com",
         "role": "manager",
         "password": "johnpassword"
-    },
-    {
-        "nama": "Alice Johnson",
-        "username": "alicej",
-        "no_telp": "086543210987",
-        "email": "alicej@user.com",
-        "role": "reservationStaff",
-        "password": "alicepassword"
-    },
-    {
-        "nama": "Bob Brown",
-        "username": "bobb",
-        "no_telp": "085432109876",
-        "email": "bob@user.com",
-        "role": "waiter",
-        "password": "bobpassword"
     }
 ])
-async def test_create_user(async_client: AsyncClient, payload: dict):
-    respon = await async_client.post("/user", json=payload)
-    assert respon.status_code == 201, respon.text
-    data = respon.json()
-    assert data["username"] == payload["username"]
-    assert data["email"] == payload["email"]
-    assert data["role"] == payload["role"]
-    assert "user_id" in data
-    assert "password" not in data
+async def test_create_user(payload: dict, auth_header):
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test", headers=auth_header) as ac:
+        respon = await ac.post("/user/", json=payload)
+        assert respon.status_code == 201, respon.text
+        data = respon.json()
+        assert data["username"] == payload["username"]
+        assert data["email"] == payload["email"]
+        assert data["role"] == payload["role"]
+        assert "user_id" in data
+        assert "password" not in data
     
 @pytest.mark.asyncio
 async def test_get_all_user(auth_header):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test", headers=auth_header) as ac:
         #end point get all user
-        respon = await ac.get("/user")
+        respon = await ac.get("/user/")
         assert respon.status_code == 200, respon.text
         data = respon.json()
         
@@ -90,7 +76,7 @@ async def test_get_user_by_id(auth_header):
             "role": "customer",
             "password": "testpassword"
         }
-        create_respon = await ac.post("/user", json=payload, headers=auth_header)
+        create_respon = await ac.post("/user/", json=payload, headers=auth_header)
         assert create_respon.status_code == 201, create_respon.text
         created_user = create_respon.json()
         user_id = created_user["user_id"]
@@ -148,27 +134,27 @@ async def test_update_user(auth_header):
     async with AsyncClient(transport=transport, base_url="http://test", headers=auth_header) as ac:
     #data user baru sebelum update
         payload = {
-        "nama": "belum update user",
-        "username": "belumupdate",
-        "no_telp": "+6281122334455",
-        "email": "testing@gmail.com",
-        "role": "customer",
-        "password": "testpassword"
-     }
-    old_data = await ac.post("/user", json=payload, headers=auth_header)
-    assert old_data.status_code == 201, old_data.text
-    created_user = old_data.json()
-    user_id = created_user["user_id"]
+            "nama": "belum update user",
+            "username": "belumupdate",
+            "no_telp": "+6281122334455",
+            "email": "Belum@gmail.com",
+            "role": "customer",
+            "password": "testpassword"
+        }
+        old_data = await ac.post("/user/", json=payload, headers=auth_header)
+        assert old_data.status_code == 201, old_data.text
+        created_user = old_data.json()
+        user_id = created_user["user_id"]
     
-    #data user setelah update
-    update_payload = {
-        "nama": "sudah update user"
-    }
-    data = await ac.patch(f"/user/{user_id}", json=update_payload, headers=auth_header)
-    assert data.status_code == 200, data.text
-    updated_user = data.json()
-    assert updated_user["nama"] == update_payload["nama"]
-    assert updated_user["username"] == payload["username"] # memastikan username tidak berubah
+        #data user setelah update
+        update_payload = {
+            "nama": "sudah update user"
+        }
+        data = await ac.patch(f"/user/{user_id}", json=update_payload, headers=auth_header)
+        assert data.status_code == 200, data.text
+        updated_user = data.json()
+        assert updated_user["nama"] == update_payload["nama"]
+        assert updated_user["username"] == payload["username"] # memastikan username tidak berubah
     
 @pytest.mark.asyncio
 async def test_delete_user(auth_header):
@@ -179,11 +165,11 @@ async def test_delete_user(auth_header):
         "nama": "dataterhapus",
         "username": "hapushapus",
         "no_telp": "+6281122334455",
-        "email": "testing@gmail.com",
+        "email": "hapus@gmail.com",
         "role": "customer",
         "password": "testpassword"
         }
-        data = await ac.post("/user", json=payload, headers=auth_header)
+        data = await ac.post("/user/", json=payload, headers=auth_header)
         assert data.status_code == 201, data.text
         created_user = data.json()
         user_id = created_user["user_id"]

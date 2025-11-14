@@ -44,10 +44,10 @@ def create_meja(
     return meja_service.create_meja(db, meja)
 
 
-""" PUT /meja/{kode_meja} = update meja """
+""" PATCH /meja/{kode_meja} = update meja """
 @router.patch("/{kode_meja}", response_model=MejaResponse)
 def update_meja(
-    kode_meja: int,
+    kode_meja: str,
     meja: MejaUpdate,
     db: Session = Depends(get_db),
     current_petugas: User = Depends(get_current_petugas)
