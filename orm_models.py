@@ -36,6 +36,10 @@ class User(Base):
     reservations = relationship("Reservation", back_populates="user")
     feedback = relationship("Feedback", back_populates="user")
 
+class StatusMeja(enum.Enum):
+    tersedia = "tersedia"
+    tidaktersedia = "tidak tersedia"
+
 class Meja(Base):
     __tablename__ = "meja"
     
@@ -43,6 +47,7 @@ class Meja(Base):
     kode_meja = Column(String, unique=True, index=True, nullable=False)
     kapasitas = Column(Integer, nullable=False)
     lokasi = Column(String, nullable=False)
+    status = Column(Enum(StatusMeja), default=StatusMeja.tersedia, nullable=False)
     
     reservations = relationship("Reservation", back_populates="meja")
 

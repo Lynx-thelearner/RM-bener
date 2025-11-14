@@ -3,7 +3,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pytest, pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from main import app
-import uuid
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("payload", [
