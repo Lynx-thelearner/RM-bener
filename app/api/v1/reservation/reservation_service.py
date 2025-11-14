@@ -5,7 +5,8 @@ from app.models.v1.reservation.reservation_model import (
     ReservationResponse
 )
 from sqlalchemy.dialects.postgresql import UUID
-from orm_models import Reservation
+from orm_models import Reservation, Meja
+from fastapi import HTTPException
 
 """ Function untuk ambil data reservation """
 def get_all_reservation(db: Session):
@@ -17,8 +18,22 @@ def get_reservation_by_id(db: Session, reservation_id: int):
 
 """ Function untuk tambah data reservation """
 def create_reservation(db: Session, reservation: ReservationCreate):
+    #buat ngecek apakah mejanya tersedia atau tidak
+    meja = db.query(Meja).filter(Meja.kode_meja == reservation.kode_meja).first()
+    if not meja:
+        raise HTTPException(status_code=404, detail="meja tidak ditemukan")
+    
+    #buat ngecek statusnya
+    if meja.status != "tersedia":
+        raise HTTPException(status_code=400, detail="Meja tidak tersedia")
+    
+    #buat data reservasi
     new_reservation = Reservation(**reservation.model_dump())
     db.add(new_reservation)
+    
+    #ubah status mejanya
+    meja.status = "tidak tersedia"
+    
     db.commit()
     db.refresh(new_reservation)
     return new_reservation
@@ -42,4 +57,4 @@ def delete_reservation(db: Session, reservation_id: int):
     deleted_reservation = reservation
     db.delete(reservation)
     db.commit()
-    return delete_reservation
+    return deleted_reservation
