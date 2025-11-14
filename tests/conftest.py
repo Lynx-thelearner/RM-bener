@@ -25,3 +25,20 @@ async def auth_header():
         assert respon.status_code == 200, respon.text
         token = respon.json().get("access_token")
         return {"Authorization": f"Bearer {token}"}
+    
+@pytest_asyncio.fixture
+async def test_user(auth_header):
+    payload = {
+        "username":"Delta",
+        "nama":"Diaz",
+        "no_telp":"08858885858",
+        "email":"diazdaffa@gmail.com",
+        "role":"customer",
+        "password":"12345678"
+    }
+    
+    transport = ASGITransport(app=app)
+    
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        respon = await ac.post("/user/", json=payload, headers=auth_header)
+        user = respon.json()
