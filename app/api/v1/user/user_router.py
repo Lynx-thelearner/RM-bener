@@ -7,7 +7,7 @@ from orm_models import User
 from app.core.auth import get_current_user, get_current_admin, get_current_manager, get_current_petugas, get_current_reservationStaff
 from uuid import UUID
 
-router = APIRouter( tags=["User"])
+router = APIRouter( tags=["User"], prefix="/user")
 
 """=============================PROFILE TERITORI====================================="""
 @router.get("/profile", response_model=UserResponse)

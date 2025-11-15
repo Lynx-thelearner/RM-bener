@@ -5,7 +5,7 @@ from app.models.v1.reservation.reservation_model import (
     ReservationResponse
 )
 from sqlalchemy.dialects.postgresql import UUID
-from orm_models import Reservation, Meja
+from orm_models import Reservation, Meja, StatusMeja
 from fastapi import HTTPException
 
 """ Function untuk ambil data reservation """
@@ -14,33 +14,38 @@ def get_all_reservation(db: Session):
 
 """ Function untuk ambil data reservation berdasarkan ID """
 def get_reservation_by_id(db: Session, reservation_id: int):
-    return db.query(Reservation).filter(Reservation.id == reservation_id).first()
+    return db.query(Reservation).filter(Reservation.reservation_id == reservation_id).first()
 
-""" Function untuk tambah data reservation """
-def create_reservation(db: Session, reservation: ReservationCreate):
-    #buat ngecek apakah mejanya tersedia atau tidak
-    meja = db.query(Meja).filter(Meja.kode_meja == reservation.kode_meja).first()
+def create_reservation(request: ReservationCreate, db: Session):
+    # cek apakah meja tersedia
+    meja = db.query(Meja).filter(Meja.meja_id == request.meja_id).first()
     if not meja:
-        raise HTTPException(status_code=404, detail="meja tidak ditemukan")
-    
-    #buat ngecek statusnya
-    if meja.status != "tersedia":
+        raise HTTPException(status_code=404, detail="Meja tidak ditemukan")
+
+    # cek status meja
+    if meja.status is not StatusMeja.tersedia:
+        print("REQUEST:", request.meja_id)
+        print("MEJA QUERY RESULT:", meja)
+        print("STATUS RAW:", repr(meja.status) if meja else None)
+
         raise HTTPException(status_code=400, detail="Meja tidak tersedia")
-    
-    #buat data reservasi
-    new_reservation = Reservation(**reservation.model_dump())
+
+    # buat data reservasi
+    new_reservation = Reservation(**request.model_dump())
     db.add(new_reservation)
-    
-    #ubah status mejanya
-    meja.status = "tidak tersedia"
-    
+
+    # ubah status meja
+    meja.status = StatusMeja.tidaktersedia
+
     db.commit()
     db.refresh(new_reservation)
     return new_reservation
 
+
+
 """ Function untuk update data reservation """
 def update_reservation(db: Session, reservation_id: int, reservation_update: ReservationUpdate):
-    reservation = db.query(Reservation).filter(Reservation.id == reservation_id).first()
+    reservation = db.query(Reservation).filter(Reservation.reservation_id == reservation_id).first()
     if reservation:
         for key, value in reservation_update.model_dump(exclude_unset=True).items():
             setattr(reservation, key, value)
@@ -50,11 +55,10 @@ def update_reservation(db: Session, reservation_id: int, reservation_update: Res
 
 """Function hapus data reservasi"""
 def delete_reservation(db: Session, reservation_id: int):
-    reservation = db.query(Reservation).filter(reservation.id == reservation_id).first()
+    reservation = db.query(Reservation).filter(Reservation.reservation_id == reservation_id).first()
     if not reservation:
         return None
-    #Simpan datanya
-    deleted_reservation = reservation
     db.delete(reservation)
     db.commit()
-    return deleted_reservation
+    return True
+

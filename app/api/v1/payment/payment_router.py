@@ -10,7 +10,7 @@ from app.api.v1.payment import payment_service
 from orm_models import User
 from app.core.auth import get_current_admin, get_current_user, get_current_manager, get_current_petugas
 
-router = APIRouter( tags=["Payment"])
+router = APIRouter( tags=["Payment"], prefix="/payment")
 
 
 """ GET /payment = semua pembayaran """
