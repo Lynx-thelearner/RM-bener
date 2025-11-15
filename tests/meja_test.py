@@ -54,7 +54,7 @@ async def test_get_meja_by_kode_meja(auth_header):
         "kode_meja": "D2",
         "kapasitas": 4,
         "lokasi": "Dekat pintu balkon",
-        "status": "tidak tersedia"
+        "status": "tidakTersedia"
     } 
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         create_response = await ac.post("/meja/", json=payload, headers=auth_header)

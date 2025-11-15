@@ -38,7 +38,7 @@ class User(Base):
 
 class StatusMeja(enum.Enum):
     tersedia = "tersedia"
-    tidaktersedia = "tidak tersedia"
+    tidaktersedia = "tidaktersedia"
 
 class Meja(Base):
     __tablename__ = "meja"

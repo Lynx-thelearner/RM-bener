@@ -29,8 +29,8 @@ async def read_root():
 
 app.include_router(auth_router.router)
 
-app.include_router(meja_router.router, prefix="/meja", tags=["Meja"])
-app.include_router(user_router.router, prefix="/user", tags=["User"])
-app.include_router(reservation_router.router, prefix="/reservation", tags=["Reservation"])
-app.include_router(payment_router.router, prefix="/payment", tags=["Payment"])
-app.include_router(feedback_router.router, prefix="/feedback", tags=["Feedback"])
+app.include_router(meja_router.router)
+app.include_router(user_router.router)
+app.include_router(reservation_router.router)
+app.include_router(payment_router.router)
+app.include_router(feedback_router.router)

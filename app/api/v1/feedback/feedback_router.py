@@ -10,7 +10,7 @@ from app.models.v1.feedback.feedback_models import (
 )
 from app.api.v1.feedback import feedback_service
 
-router = APIRouter(tags=["Feedback"])
+router = APIRouter(tags=["Feedback"], prefix="/feedback")
 
 
 """ GET /feedback = semua feedback """

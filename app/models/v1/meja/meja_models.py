@@ -8,7 +8,7 @@ class MejaBase(BaseModel):
     kode_meja: str = Field(..., description="Kode unik untuk meja")
     kapasitas: int = Field(..., description="Kapasitas maksimum meja")
     lokasi: str = Field(..., description="Lokasi meja di restoran")
-    status: StatusMeja = Field(..., description="tersedia atau tidak tersedia")
+    status: StatusMeja = Field(..., description="tersedia atau tidaktersedia")
 
 class MejaCreate(MejaBase):
     """Model untuk membuat meja baru"""
