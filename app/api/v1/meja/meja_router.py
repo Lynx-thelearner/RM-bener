@@ -9,7 +9,7 @@ from app.models.v1.meja.meja_models import (
     )
 from app.api.v1.meja import meja_service
 from orm_models import User
-from app.core.auth import get_current_admin , get_current_manager, get_current_petugas
+from app.core.auth import get_current_admin , get_current_manager, get_current_waiter
 
 router = APIRouter(tags=["Meja"])
 
@@ -50,7 +50,7 @@ def update_meja(
     kode_meja: str,
     meja: MejaUpdate,
     db: Session = Depends(get_db),
-    current_petugas: User = Depends(get_current_petugas)
+    current_waiter: User = Depends(get_current_waiter)
 ):
     updated_meja = meja_service.update_meja(db, kode_meja, meja)
     if not updated_meja:

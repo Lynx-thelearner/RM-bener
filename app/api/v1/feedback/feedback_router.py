@@ -1,5 +1,5 @@
 from orm_models import User
-from app.core.auth import get_current_admin, get_current_user, get_current_petugas
+from app.core.auth import get_current_admin, get_current_user, get_current_waiter
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
@@ -22,7 +22,7 @@ def list_feedback(db: Session = Depends(get_db)):
 """ GET /feedback/{id} = detail feedback """
 @router.get("/{id}", response_model=FeedbackResponse)
 def get_feedback(id: int, db: Session = Depends(get_db),
-                 current_petugas = Depends(get_current_petugas)
+                 current_waiter = Depends(get_current_waiter)
                  ):
     feedback = feedback_service.get_feedback_by_id(db, id)
     if not feedback:

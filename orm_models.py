@@ -83,7 +83,7 @@ class Payment(Base):
     payment_id = Column(Integer, primary_key=True, index=True)
     reservation_id = Column(Integer, ForeignKey("reservation.reservation_id"), nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)
-    payment_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    payment_date = Column(DateTime(), nullable=False)
     status = Column(Enum(PaymentStatus), default=PaymentStatus.menunggu, nullable=False)
     
     reservation = relationship("Reservation", back_populates="payment")
