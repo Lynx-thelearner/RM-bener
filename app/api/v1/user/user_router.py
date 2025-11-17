@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, status
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
-from app.models.v1.user.user_model import  UserCreate,  UserUpdate,  UserResponse, DeleteUserResponse
+from app.models.v1.user.user_model import  UserCreate,  UserUpdate,  UserResponse
 from app.api.v1.user import user_service
 from orm_models import User
-from app.core.auth import get_current_user, get_current_admin, get_current_manager, get_current_petugas, get_current_reservationStaff
+from app.core.auth import get_current_user, get_current_admin, get_current_manager
 from uuid import UUID
 
 router = APIRouter( tags=["User"], prefix="/user")

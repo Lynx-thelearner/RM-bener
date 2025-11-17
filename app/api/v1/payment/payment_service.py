@@ -13,7 +13,7 @@ def get_all_payments(db: Session):
 
 """ Fungsi untuk mendapatkan pembayaran berdasarkan ID """
 def get_payment_by_id(db: Session, payment_id: int):
-    return db.query(Payment).filter(Payment.id == payment_id).first()
+    return db.query(Payment).filter(Payment.payment_id == payment_id).first()
 
 
 """ Fungsi untuk membuat pembayaran baru """
