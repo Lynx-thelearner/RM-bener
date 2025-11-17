@@ -19,16 +19,13 @@ def list_feedback(db: Session = Depends(get_db)):
     return feedback_service.get_all_feedback(db)
 
 
-""" GET /feedback/{id} = detail feedback """
-@router.get("/{id}", response_model=FeedbackResponse)
-def get_feedback(id: int, db: Session = Depends(get_db),
-                 current_waiter = Depends(get_current_waiter)
-                 ):
-    feedback = feedback_service.get_feedback_by_id(db, id)
+""" GET /feedback/{id} = feedback berdasarkan id """
+@router.get("/{feedback_id}", response_model=FeedbackResponse)
+def get_feedback(feedback_id: int, db: Session = Depends(get_db)):
+    feedback = feedback_service.get_feedback_by_id(db, feedback_id)
     if not feedback:
         raise HTTPException(status_code=404, detail="Feedback tidak ditemukan")
     return feedback
-
 
 """ POST /feedback = tambah feedback baru """
 @router.post("/", response_model=FeedbackResponse, status_code=201)
@@ -39,22 +36,22 @@ def create_feedback(feedback: FeedbackCreate, db: Session = Depends(get_db),
 
 
 """ PUT /feedback/{id} = update feedback berdasarkan feedback orang yg login """
-@router.put("/{id}", response_model=FeedbackResponse)
-def update_feedback(id: int, feedback_update: FeedbackUpdate, db: Session = Depends(get_db),
+@router.put("/{feedback_id}", response_model=FeedbackResponse)
+def update_feedback(feedback_id: int, feedback_update: FeedbackUpdate, db: Session = Depends(get_db),
                     current_user: User = Depends(get_current_user)
                     ):
-    updated_feedback = feedback_service.update_feedback(db, id, feedback_update, current_user.id)
+    updated_feedback = feedback_service.update_feedback(db, feedback_id, feedback_update, current_user.user_id)
     if not updated_feedback:
         raise HTTPException(status_code=404, detail="Feedback tidak ditemukan atau Anda tidak memiliki izin untuk memperbarui feedback ini")
     return updated_feedback
 
 
 """ DELETE /feedback/{id} = hapus feedback """
-@router.delete("/{id}", response_model=FeedbackResponse)
-def delete_feedback(id: int, db: Session = Depends(get_db), 
+@router.delete("/{feedback_id}", response_model=FeedbackResponse)
+def delete_feedback(feedback_id: int, db: Session = Depends(get_db), 
                     current_admin: User= Depends (get_current_admin)
                     ):
-    deleted_feedback = feedback_service.delete_feedback(db, id)
+    deleted_feedback = feedback_service.delete_feedback(db, feedback_id)
     if not deleted_feedback:
         raise HTTPException(status_code=404, detail="Feedback tidak ditemukan")
     return deleted_feedback
