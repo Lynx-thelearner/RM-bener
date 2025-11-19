@@ -11,7 +11,7 @@ from app.api.v1.meja import meja_service
 from orm_models import User
 from app.core.auth import get_current_admin , get_current_manager, get_current_waiter
 
-router = APIRouter(tags=["Meja"])
+router = APIRouter(tags=["Meja"], prefix="/meja")
 
 
 """ GET /meja = semua meja """
@@ -20,9 +20,9 @@ def list_meja(db: Session = Depends(get_db)):
     return meja_service.get_all_meja(db)
 
 """Get all available meja/ menampilkan semua meja yang statusnya tersedia"""
-@router.get("/available", response_model=list[MejaResponse])
+@router.get("/available", response_model=dict)
 def list_available_meja(db: Session = Depends(get_db)):
-    return meja_service.get_available_meja(db)
+    return meja_service.check_available_meja(db)
 
 
 """ GET /meja/{kode_meja} = detail meja """
