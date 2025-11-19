@@ -11,13 +11,25 @@ def get_all_meja(db: Session):
     return db.query(Meja).all()
 
 def get_available_meja(db: Session):
-    """Service function untuk mendapatkan semua meja yang statusnya tersedia"""
-    """Jika tidak ada meja yang tersedia, return massage "saat ini tidak ada meja yang tersedia" """
-    if not db.query(Meja).filter(Meja.status == 'tersedia').all():
-        return "Saat ini tidak ada meja yang tersedia"
-    return db.query(Meja).filter(Meja.status == 'tersedia').all()
-   
-    
+    """Service function untuk mendapatkan semua meja yang tersedia"""
+    available_meja = db.query(Meja).filter(Meja.status == "tersedia").all()
+    return available_meja
+
+def check_available_meja(db: Session):
+    """Function untuk ngecek apakah ada meja yang tersedia"""
+    available_meja = db.query(Meja).filter(Meja.status == "tersedia").all()
+    if not available_meja:
+        return {
+            "available": False,
+            "message": "Tidak ada meja yang tersedia saat ini",
+            "data": []
+        }
+    return {
+        "available": True,
+        "message": "Meja tersedia",
+        "data": available_meja
+    }
+
 
 
 def get_meja_by_kode_meja(db: Session, kode_meja: str):
