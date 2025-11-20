@@ -9,8 +9,17 @@ from orm_models import Reservation, Meja, StatusMeja
 from fastapi import HTTPException
 
 """ Function untuk ambil data reservation """
-def get_all_reservation(db: Session):
-    return db.query(Reservation).all()
+def get_all_reservation(db: Session, skip: int = 0, limit: int = 10):
+    return (
+        db.query(Reservation)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+def get_total_reservation_count(db: Session):
+    return db.query(Reservation).count()
+
 
 """ Function untuk ambil data reservation berdasarkan ID """
 def get_reservation_by_id(db: Session, reservation_id: int):

@@ -23,8 +23,8 @@ router = APIRouter(
 def get_all_reservation(
     db: Session = Depends(get_db),
     current_waiter = Depends(get_current_waiter),
-    skip: int = Query(0, ge=0, description="Number of records to skip"),
-    limit: int = Query(10, ge=1, le=100, description="Number of records to return")
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1, le=100)
 ):
     reservations = reservation_service.get_all_reservation(db, skip=skip, limit=limit)
     total = reservation_service.get_total_reservation_count(db)
@@ -35,6 +35,7 @@ def get_all_reservation(
         "skip": skip,
         "limit": limit
     }
+
 
 """"Get by ID"""
 @router.get("/{reservation_id}", response_model=ReservationResponse)
