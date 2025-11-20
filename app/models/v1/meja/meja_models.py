@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, EmailStr, StringConstraints, ConfigDict
 from typing import Optional, Annotated
 from enum import Enum
 from orm_models import StatusMeja
+from orm_models import Meja
 
 class MejaBase(BaseModel):
     """Model Awal Meja"""
@@ -18,7 +19,8 @@ class MejaResponse(MejaBase):
     """Model untuk memberikan response meja"""
     meja_id: int = Field(..., description="ID unik untuk meja")
     
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
     
 class MejaUpdate(BaseModel):
     kode_meja: Optional[str] = None
