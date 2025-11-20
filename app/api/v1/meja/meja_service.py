@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.models.v1.meja.meja_models import (         
     MejaCreate,   
     MejaUpdate,   
+    MejaResponse
 )
 from orm_models import Meja
 
@@ -24,11 +25,7 @@ def check_available_meja(db: Session):
             "message": "Tidak ada meja yang tersedia saat ini",
             "data": []
         }
-    return {
-        "available": True,
-        "message": "Meja tersedia",
-        "data": available_meja
-    }
+    return available_meja
 
 
 

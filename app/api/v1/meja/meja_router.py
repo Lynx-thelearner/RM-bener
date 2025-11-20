@@ -19,10 +19,11 @@ router = APIRouter(tags=["Meja"], prefix="/meja")
 def list_meja(db: Session = Depends(get_db)):
     return meja_service.get_all_meja(db)
 
-"""Get all available meja/ menampilkan semua meja yang statusnya tersedia"""
-@router.get("/available", response_model=dict)
+"""Get apelebel meja"""
+@router.get("/available", response_model=list[MejaResponse])
 def list_available_meja(db: Session = Depends(get_db)):
     return meja_service.check_available_meja(db)
+
 
 
 """ GET /meja/{kode_meja} = detail meja """
