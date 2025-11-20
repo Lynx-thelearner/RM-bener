@@ -1,21 +1,40 @@
-from fastapi import APIRouter, HTTPException, Depends, Response
+from fastapi import APIRouter, HTTPException, Depends, Response, Query
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
 from app.models.v1.reservation.reservation_model import ReservationCreate, ReservationResponse, ReservationUpdate
 from app.api.v1.reservation import reservation_service
-from orm_models import Reservation
 from app.core.auth import get_current_waiter, get_current_user, get_current_admin
+from pydantic import BaseModel
+
+class PaginationResponse(BaseModel):
+    data: list[ReservationResponse]
+    total: int
+    skip: int
+    limit: int
+
 
 router = APIRouter(
     prefix="/reservation",
     tags=["reservation"]
 )
 
-""""Get /reservation = semua data reservasi"""
-@router.get("/", response_model=list[ReservationResponse])
-def get_all_reservation(db: Session = Depends(get_db),
-                        current_waiter = Depends(get_current_waiter)):
-    return reservation_service.get_all_reservation(db)
+""""Get /reservation = semua data reservasi dengan pagination"""
+@router.get("/", response_model=PaginationResponse)
+def get_all_reservation(
+    db: Session = Depends(get_db),
+    current_waiter = Depends(get_current_waiter),
+    skip: int = Query(0, ge=0, description="Number of records to skip"),
+    limit: int = Query(10, ge=1, le=100, description="Number of records to return")
+):
+    reservations = reservation_service.get_all_reservation(db, skip=skip, limit=limit)
+    total = reservation_service.get_total_reservation_count(db)
+    
+    return {
+        "data": reservations,
+        "total": total,
+        "skip": skip,
+        "limit": limit
+    }
 
 """"Get by ID"""
 @router.get("/{reservation_id}", response_model=ReservationResponse)
