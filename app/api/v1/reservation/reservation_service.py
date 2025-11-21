@@ -20,6 +20,10 @@ def get_all_reservation(db: Session, skip: int = 0, limit: int = 10):
 def get_total_reservation_count(db: Session):
     return db.query(Reservation).count()
 
+def get_reservations_by_user(db: Session, current_user):
+    return (
+        db.query(Reservation).filter(Reservation.user_id == current_user.user_id).order_by(Reservation.reservation_id.desc()).all()
+    )
 
 """ Function untuk ambil data reservation berdasarkan ID """
 def get_reservation_by_id(db: Session, reservation_id: int):

@@ -37,7 +37,6 @@ async def read_root():
     return {"message": "Welcome to the NER API Service!"}
 
 app.include_router(auth_router.router)
-
 app.include_router(meja_router.router)
 app.include_router(user_router.router)
 app.include_router(reservation_router.router)

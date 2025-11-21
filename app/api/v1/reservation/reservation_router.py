@@ -5,6 +5,7 @@ from app.models.v1.reservation.reservation_model import ReservationCreate, Reser
 from app.api.v1.reservation import reservation_service
 from app.core.auth import get_current_waiter, get_current_user, get_current_admin
 from pydantic import BaseModel
+import orm_models
 
 class PaginationResponse(BaseModel):
     data: list[ReservationResponse]
@@ -15,7 +16,7 @@ class PaginationResponse(BaseModel):
 
 router = APIRouter(
     prefix="/reservation",
-    tags=["reservation"]
+    tags=["Reservation"]
 )
 
 """"Get /reservation = semua data reservasi dengan pagination"""
@@ -35,13 +36,18 @@ def get_all_reservation(
         "skip": skip,
         "limit": limit
     }
-
+    
 
 """"Get by ID"""
 @router.get("/{reservation_id}", response_model=ReservationResponse)
 def get_reservation(reservation_id: int, db: Session = Depends(get_db),
                     current_waiter = Depends(get_current_waiter)):
     return reservation_service.get_reservation_by_id(db, reservation_id)
+
+@router.get("/me")
+def get_my_reservations(db: Session = Depends(get_db), current_user: orm_models.User = Depends(get_current_user)):
+    reservations = reservation_service.get_reservations_by_user(db, current_user)
+    return {"status": "success", "data": reservations}
 
 """"Buat bikin data reservasi"""
 @router.post("/", response_model=ReservationResponse)
