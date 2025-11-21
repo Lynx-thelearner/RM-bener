@@ -15,7 +15,7 @@ def get_all_feedback(db: Session):
 
 def get_feedback_by_id(db: Session, feedback_id: int):
     """Helper function untuk mendapatkan feedback berdasarkan ID"""
-    return db.query(Feedback).filter(Feedback.id == feedback_id).first()
+    return db.query(Feedback).filter(Feedback.feedback_id == feedback_id).first()
 
 
 def create_feedback(db: Session, feedback: FeedbackCreate):
@@ -30,7 +30,7 @@ def create_feedback(db: Session, feedback: FeedbackCreate):
     return new_feedback
 
 
-def update_feedback(db: Session, feedback_id: int, feedback_update: FeedbackUpdate):
+def update_feedback(db: Session, feedback_id: int, feedback_update: FeedbackUpdate, current_user=None, **kwargs):
     """Function untuk mengupdate data feedback"""
     feedback = get_feedback_by_id(db, feedback_id)
     if not feedback:
@@ -42,4 +42,15 @@ def update_feedback(db: Session, feedback_id: int, feedback_update: FeedbackUpda
 
     db.commit()
     db.refresh(feedback)
+    return feedback
+
+
+def delete_feedback(db: Session, feedback_id: int):
+    """Function untuk menghapus feedback berdasarkan ID"""
+    feedback = get_feedback_by_id(db, feedback_id)
+    if not feedback:
+        return None
+
+    db.delete(feedback)
+    db.commit()
     return feedback

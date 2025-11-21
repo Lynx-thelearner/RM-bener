@@ -95,7 +95,6 @@ def get_current_user(
     return user
 
 def get_current_admin(current_user: User = Depends(get_current_user)):
-    print(current_user.role)
     if current_user.role != UserRole.admin :
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -123,7 +122,7 @@ def get_current_reservationStaff(current_user: User = Depends(get_current_user))
 
 
 """" Mengambil user yang sedang login dan harus petugas (admin, manager, reservationStaff, waiter)"""
-def get_current_petugas(current_user: User = Depends(get_current_user)):
+def get_current_waiter(current_user: User = Depends(get_current_user)):
     if current_user.role == [UserRole.admin, UserRole.manager, UserRole.reservationStaff, UserRole.waiter]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
