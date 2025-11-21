@@ -16,6 +16,10 @@ def get_all_reservation(db: Session):
 def get_reservation_by_id(db: Session, reservation_id: int):
     return db.query(Reservation).filter(Reservation.id == reservation_id).first()
 
+""""Fucntion buat ngampilkan data reservation berdasarkan yang login"""
+def get_reservations_by_user(db: Session, current_user_id):
+    return db.query(Reservation).filter(Reservation.user_id == current_user_id.user_id).order_by(Reservation.reservation_id.desc()).all()
+
 """ Function untuk tambah data reservation """
 def create_reservation(db: Session, reservation: ReservationCreate):
     #buat ngecek apakah mejanya tersedia atau tidak
