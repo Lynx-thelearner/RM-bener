@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import pytest, pytest_asyncio
+import pytest
 from httpx import AsyncClient, ASGITransport
 from main import app
 

@@ -1,8 +1,6 @@
-from pydantic import BaseModel, Field, EmailStr, StringConstraints, ConfigDict, datetime_parse
-from typing import Optional, Annotated
+from pydantic import BaseModel, Field
+from typing import Optional
 from enum import Enum
-from sqlalchemy import Time
-from sqlalchemy.dialects.postgresql import UUID
 from datetime import date,time
 import uuid
 
@@ -10,6 +8,7 @@ class ReservationStatusEnum(str, Enum):
     menunggu = "menunggu"
     berhasil = "berhasil"
     dibatalkan = "dibatalkan"
+    berlangsung = "berlangsung"
     
 class ReservationBase(BaseModel):
     """Model Awal Reservasi"""

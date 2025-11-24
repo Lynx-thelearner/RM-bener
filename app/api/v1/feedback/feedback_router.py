@@ -1,5 +1,5 @@
-from orm_models import User
-from app.core.auth import get_current_admin, get_current_user, get_current_waiter
+from orm_models import User, UserRole
+from app.core.auth import get_current_user, require_role
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
@@ -49,7 +49,7 @@ def update_feedback(feedback_id: int, feedback_update: FeedbackUpdate, db: Sessi
 """ DELETE /feedback/{id} = hapus feedback """
 @router.delete("/{feedback_id}", response_model=FeedbackResponse)
 def delete_feedback(feedback_id: int, db: Session = Depends(get_db), 
-                    current_admin: User= Depends (get_current_admin)
+                    current_admin: User= Depends(require_role(UserRole.waiter, UserRole.reservationStaff, UserRole.manager, UserRole.admin))
                     ):
     deleted_feedback = feedback_service.delete_feedback(db, feedback_id)
     if not deleted_feedback:

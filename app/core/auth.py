@@ -66,17 +66,18 @@ def verify_token(token: str = Depends(oauth2_scheme)) -> TokenData:
 
 
 """ ================= ROLE CHECK DEPENDENCY ================= """
-def require_role(*allowed_roles: str):
+def require_role(*allowed_roles: UserRole):
     """
     Dependency reusable untuk membatasi akses endpoint berdasarkan role.
     """
-    def dependency(token_data: TokenData = Depends(verify_token)):
-        if token_data.role not in allowed_roles:
+    def dependency(current_user: User = Depends(get_current_user)):
+        if current_user.role not in allowed_roles:
+            allowed = ', '.join([role.value for role in allowed_roles])
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Insufficient permissions"
+                detail=f"Your role doesn't allow this action. Required role: {allowed}"
             )
-        return token_data
+        return current_user
     return dependency
 
 
@@ -93,39 +94,3 @@ def get_current_user(
             detail="User not found"
         )
     return user
-
-def get_current_admin(current_user: User = Depends(get_current_user)):
-    if current_user.role != UserRole.admin :
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Hanya user dengan role admin yang boleh mengakses"
-        )
-    return current_user
-
-
-""" Mengambil user yang sedang login dan harus manager atau admin"""
-def get_current_manager(current_user: User = Depends(get_current_user)):
-    if current_user.role not in [UserRole.admin, UserRole.manager]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Hanya user dengan role manager atau admin yang boleh mengakses"
-        )
-    return current_user
-
-def get_current_reservationStaff(current_user: User = Depends(get_current_user)):
-    if current_user.role not in [UserRole.admin, UserRole.manager, UserRole.reservationStaff]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Hanya user dengan role reservationStaff, manager atau admin yang boleh mengakses"
-        )
-    return current_user
-
-
-"""" Mengambil user yang sedang login dan harus petugas (admin, manager, reservationStaff, waiter)"""
-def get_current_waiter(current_user: User = Depends(get_current_user)):
-    if current_user.role == [UserRole.admin, UserRole.manager, UserRole.reservationStaff, UserRole.waiter]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Hanya user dengan role dari petugas yang boleh mengakses"
-        )
-    return current_user

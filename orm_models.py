@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, DATE, ForeignKey, DECIMAL, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 from app.core.database import Base
 import enum
 from datetime import date
@@ -8,7 +7,7 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Time
 from sqlalchemy import DateTime
-from sqlalchemy.sql import func
+
 
 metadata = Base.metadata
 
@@ -55,6 +54,7 @@ class ReservationStatus(enum.Enum):
     menunggu = "menunggu"
     berhasil = "berhasil"
     dibatalkan = "dibatalkan"
+    berlangsung = "berlangsung"
     
 class Reservation(Base):
     __tablename__ = "reservation"

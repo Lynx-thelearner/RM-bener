@@ -26,6 +26,7 @@ class MejaUpdate(BaseModel):
     kode_meja: Optional[str] = None
     kapasitas: Optional[int] = None
     lokasi: Optional[str] = None
+    status: Optional[StatusMeja] = None
 
 class MejaDeleteResponse(BaseModel):
     detail: str

@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from app.models.v1.meja.meja_models import (         
     MejaCreate,   
     MejaUpdate,   
-    MejaResponse
 )
 from orm_models import Meja
 
