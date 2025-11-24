@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, StringConstraints, ConfigDict, field_validator
 from typing import Optional, Annotated
-from enum import Enum
 from orm_models import UserRole
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import UUID

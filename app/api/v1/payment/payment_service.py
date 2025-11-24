@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.v1.payment.payment_model import (
-    PaymentCreate
-    , PaymentResponse,
+    PaymentCreate,
     PaymentUpdate
 )
 from orm_models import Payment

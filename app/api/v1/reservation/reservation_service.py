@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from app.models.v1.reservation.reservation_model import (
     ReservationCreate,
     ReservationUpdate,
-    ReservationResponse
 )
 from sqlalchemy.dialects.postgresql import UUID
 from orm_models import Reservation, Meja, StatusMeja
@@ -11,15 +10,17 @@ from fastapi import HTTPException
 """ Function untuk ambil data reservation """
 def get_all_reservation(db: Session, skip: int = 0, limit: int = 10):
     return (
-        db.query(Reservation)
+        db.query(Reservation).order_by(Reservation.reservation_id.desc())
         .offset(skip)
         .limit(limit)
         .all()
     )
 
+""" Function untuk ambil total count reservation """
 def get_total_reservation_count(db: Session):
     return db.query(Reservation).count()
 
+""""Buat ambil data reservasi berdasarkan user"""
 def get_reservations_by_user(db: Session, current_user):
     return (
         db.query(Reservation).filter(Reservation.user_id == current_user.user_id).order_by(Reservation.reservation_id.desc()).all()

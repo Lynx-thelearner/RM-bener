@@ -1,9 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import date
-from decimal import Decimal
-from enum import Enum
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
 class Feedback(BaseModel):

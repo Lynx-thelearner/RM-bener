@@ -8,8 +8,8 @@ from app.models.v1.meja.meja_models import (
     MejaDeleteResponse
     )
 from app.api.v1.meja import meja_service
-from orm_models import User
-from app.core.auth import get_current_admin , get_current_manager, get_current_waiter
+from orm_models import User, UserRole
+from app.core.auth import get_current_user, require_role
 
 router = APIRouter(tags=["Meja"], prefix="/meja")
 
@@ -40,7 +40,7 @@ def get_meja(kode_meja: str, db: Session = Depends(get_db)):
 def create_meja(
     meja: MejaCreate,
     db: Session = Depends(get_db),
-    current_manager : User = Depends(get_current_manager)
+    current_manager : User = Depends(require_role(UserRole.manager, UserRole.admin))
 ):
     return meja_service.create_meja(db, meja)
 
@@ -51,7 +51,7 @@ def update_meja(
     kode_meja: str,
     meja: MejaUpdate,
     db: Session = Depends(get_db),
-    current_waiter: User = Depends(get_current_waiter)
+    current_waiter: User = Depends(require_role(UserRole.waiter, UserRole.reservationStaff, UserRole.manager, UserRole.admin))
 ):
     updated_meja = meja_service.update_meja(db, kode_meja, meja)
     if not updated_meja:
@@ -63,7 +63,7 @@ def update_meja(
 """ DELETE /meja/{kode_meja} = hapus meja """
 @router.delete("/{kode_meja}", response_model=MejaDeleteResponse)
 def delete_meja(kode_meja: str, db: Session = Depends(get_db),
-                current_manager: User = Depends(get_current_manager)):
+                current_manager: User = Depends(require_role(UserRole.manager, UserRole.admin))):
     deleted_meja = meja_service.delete_and_return_meja(db, kode_meja)
     if deleted_meja:
         return {
