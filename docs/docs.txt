@@ -1,0 +1,11 @@
+Modular Monolit
+monolitik, mikroservis, modular monolitik
+Version = Release
+
+Feat/ = tambah fiture
+Fix/ = bug Fix
+
+
+Dev = Masih dalam Development
+Main = Siap Pakai
+    = Release di git, Pakai Tag untuk memberikan versi. {Semantic versioning}/
